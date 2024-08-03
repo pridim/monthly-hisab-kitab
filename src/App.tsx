@@ -10,6 +10,7 @@ import Root from './root';
 import MemberTypes from './root/membertypes';
 import UserRegistration from './root/registration';
 import Dashboard from './root/dashboard';
+import UserLogin from './root/login';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: '/registration/:userType',
         element: <UserRegistration />
+      },
+      {
+        path: '/login',
+        element: <UserLogin />
       },
       {
         path: '/dashboard',
