@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function UserRegistration() {
     const [user, setUser] = React.useState({
@@ -11,11 +11,12 @@ export default function UserRegistration() {
     })
 
     const navigate = useNavigate();
-
+    const params = useParams();
+    const { userType } = params;
+    
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        console.log(user);
-        localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('userData', JSON.stringify({ user, userType }))
         navigate('/dashboard')
     }
 

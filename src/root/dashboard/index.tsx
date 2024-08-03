@@ -4,9 +4,9 @@ import ManageItems from './manageItems';
 
 const Dashboard = () => {
     
-    let user: any = localStorage.getItem('user');
-    if(user) {
-        user = JSON.parse(user);
+    let userData: any = localStorage.getItem('userData');
+    if(userData) {
+        userData = JSON.parse(userData);
     }   
     
     const getFormattedUsername = (str: string) => {
@@ -14,7 +14,7 @@ const Dashboard = () => {
     }
         
     return <Box width="100%" textAlign="left">
-      {user && <Box component="h2" mb={4}>Hello, Mr. {getFormattedUsername(user.username)}</Box>}
+      {userData && <Box component="h2" mb={4}>Hello, Mr. {getFormattedUsername(userData.user.username)}</Box>}
         <ManageItems />
     </Box>
 }

@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         element: <MemberTypes />
       },
       {
-        path: '/registration',
+        path: '/registration/:userType',
         element: <UserRegistration />
       },
       {
