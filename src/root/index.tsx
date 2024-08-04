@@ -12,7 +12,7 @@ export default function Root() {
     <ErrorBoundary>
       <Container maxWidth="sm">
         <Box component="p" onClick={() => navigate(-1)}>Back</Box>
-        <Box className="App">
+        <Box className="App" justifyContent="center">
           <Outlet />
         </Box>
       </Container>

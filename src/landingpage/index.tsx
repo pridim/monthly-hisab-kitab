@@ -5,7 +5,7 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { Box, Button } from '@mui/material';
 
 const LandingPage = () => {
-    return <div className="App">
+    return <Box className="App" justifyContent="center">
         <Box className="logo-wrapper">
             <CurrencyRupeeIcon style={{ fontSize: '5rem'}} />
             <MoneySharpIcon style={{ fontSize: '5rem'}} />
@@ -17,7 +17,7 @@ const LandingPage = () => {
         <Button color='error' variant='outlined' size='large'>
             <Link to="/member-types">Lets start</Link>
         </Button>
-    </div>
+    </Box>
 }
 
 export default LandingPage;

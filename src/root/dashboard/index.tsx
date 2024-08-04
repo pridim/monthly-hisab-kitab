@@ -2,6 +2,18 @@ import React from 'react'
 import { Box } from '@mui/material'
 import ManageItems from './manageItems';
 import { UserItemProps } from '../registration';
+import { getFirstCapLetter, getPrefix } from '../../utils';
+
+export type ListItemType = {
+    label: string;
+    value: string;
+}
+
+const ItemLists: ListItemType[] = [
+    { label: 'Milk', value: 'milk'},
+    { label: 'Grocery', value: 'grocery'},
+    { label: 'Others', value: 'others'},
+]
 
 const Dashboard = () => {
     
@@ -10,22 +22,14 @@ const Dashboard = () => {
     if(userData) {
         loggedInUser = JSON.parse(userData) as UserItemProps;
     }
-    
-    const getFormattedUsername = (str: string) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    const getPrefix = (gender: string) => {
-        return gender === 'male' ? 'Mr.' : 'Mrs.'
-    }
         
     return <Box width="100%" textAlign="left">
         { loggedInUser && 
             <Box component="h2" mb={4}>
-                Hello, {getPrefix(loggedInUser.user.gender)} {getFormattedUsername(loggedInUser.user.username)}
+                Hello, {getPrefix(loggedInUser.user.gender)} {getFirstCapLetter(loggedInUser.user.username)}
             </Box>
         }
-        <ManageItems />
+        <ManageItems data={ItemLists}  />
     </Box>
 }
 

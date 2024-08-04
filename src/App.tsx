@@ -11,6 +11,7 @@ import MemberTypes from './root/membertypes';
 import UserRegistration from './root/registration';
 import Dashboard from './root/dashboard';
 import UserLogin from './root/login';
+import DashboardItemTypes from './root/dashboard/dashboardItemTypes';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard',
         element: <Dashboard />
+      },
+      {
+        path: '/dashboard/type/:type',
+        element: <DashboardItemTypes />
       }
     ]
   },

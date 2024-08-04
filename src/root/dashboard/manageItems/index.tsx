@@ -2,16 +2,24 @@ import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import TextLabel from '../../../common/LabelComp';
 import { useNavigate } from 'react-router-dom';
+import { ListItemType } from '..';
 
-export default function ManageItems() {
+interface ManageItemsProps {
+    data: ListItemType[];
+}
+
+export default function ManageItems(props: ManageItemsProps) {
+  const { data } = props;
   const [selectedItem, setSelectedItem] = React.useState('');
+
   const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedItem(event.target.value);
+    navigate(`/dashboard/type/${event.target.value}`)
   };
 
   return (
@@ -27,18 +35,9 @@ export default function ManageItems() {
                 <MenuItem value="">
                     <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>Milk</MenuItem>
-                <MenuItem value={20}>grocery</MenuItem>
-                <MenuItem value={30}>Other</MenuItem>
+                {data.map((item) => <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>)}
             </Select>
         </FormControl>
-        <Button color="warning"
-            variant='outlined'
-            disabled={!selectedItem} fullWidth
-            onClick={() => navigate('/add-data')}
-        > 
-            Continue
-        </Button>
     </Box>
   );
 }
