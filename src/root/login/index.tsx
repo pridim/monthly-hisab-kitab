@@ -1,16 +1,23 @@
-import * as React from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-import { UserItemProps } from '../registration';
+import { UserItemType } from '../registration';
 
 export default function UserLogin() {
   const [phone, setPhone] = React.useState('')
   const [errorMsg, setErrorMsg] = React.useState('')
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if(loggedInUser) {
+      navigate('/dashboard')
+    }
+  }, [navigate])
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -20,9 +27,9 @@ export default function UserLogin() {
         return
     } else {
         const userList = JSON.parse(users);
-        const userFound = userList.filter((userItem: UserItemProps) => userItem.user.phone === phone)
+        const userFound = userList.filter((userItem: UserItemType) => userItem.user.phone === phone)
         if(userFound.length) {
-            localStorage.setItem('logged', JSON.stringify(userFound[0]))
+            localStorage.setItem('loggedInUser', JSON.stringify(userFound[0]))
             navigate('/dashboard')
         } else {
             setErrorMsg("Please register, user doesn't exist")

@@ -6,7 +6,7 @@ export const getPrefix = (gender: string) => {
     return gender === 'male' ? 'Mr.' : 'Mrs.'
 }
 
-export const getFormattedDate = (date: Date) => {
+export const getFormattedDate = (date: string) => {
     
     let formattedDate = '';
 

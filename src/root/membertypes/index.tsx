@@ -3,9 +3,10 @@ import { Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const MemberTypes = () => {
+    
     const navigate = useNavigate();
 
-    return <Box>
+    return <Box display="flex" flexDirection="column" height="80vh" justifyContent="center">
         <Box component="h3">Choose a member type to start</Box>
         <Button color="primary" variant='outlined' size='large' fullWidth
             onClick={()=> navigate(`/registration/buyer`)}

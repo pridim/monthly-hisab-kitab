@@ -12,6 +12,7 @@ import UserRegistration from './root/registration';
 import Dashboard from './root/dashboard';
 import UserLogin from './root/login';
 import DashboardItemTypes from './root/dashboard/dashboardItemTypes';
+import AddNewRecord from './root/dashboard/addNewRecord';
 
 const router = createBrowserRouter([
   {
@@ -36,11 +37,17 @@ const router = createBrowserRouter([
       },
       {
         path: '/dashboard',
-        element: <Dashboard />
-      },
-      {
-        path: '/dashboard/type/:type',
-        element: <DashboardItemTypes />
+        element: <Dashboard />,
+        children: [
+          {
+            path: '/dashboard/type/:type',
+            element: <DashboardItemTypes />
+          },
+          {
+            path: '/dashboard/add-new',
+            element: <AddNewRecord />
+          }
+        ]
       }
     ]
   },

@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Box } from '@mui/material';
 import TextLabel from '../../../common/LabelComp';
-import { useNavigate } from 'react-router-dom';
-import { ListItemType } from '..';
+import { ListItemType } from '../../../apis/types';
 
 interface ManageItemsProps {
-    data: ListItemType[];
+  data: ListItemType[];
 }
 
 export default function ManageItems(props: ManageItemsProps) {
@@ -19,13 +19,15 @@ export default function ManageItems(props: ManageItemsProps) {
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedItem(event.target.value);
-    navigate(`/dashboard/type/${event.target.value}`)
+    localStorage.setItem('selectedActionType', event.target.value)
+    if(event.target.value)
+      navigate(`/dashboard/type/${event.target.value}`)
   };
 
   return (
-    <Box>
+    <Box textAlign="left">
         <TextLabel label="Select item to manage" />
-        <FormControl fullWidth sx={{mb: 4}}>
+        <FormControl fullWidth sx={{mb: 0}}>
             <Select
                 value={selectedItem}
                 onChange={handleChange}

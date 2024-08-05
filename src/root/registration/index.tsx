@@ -15,7 +15,7 @@ export interface UserProps {
   phone: string;
 }
 
-export interface UserItemProps {
+export interface UserItemType {
   user: UserProps;
   userType: string | undefined;
 }
@@ -37,7 +37,7 @@ export default function UserRegistration() {
     if(!users) {
       localStorage.setItem('users', JSON.stringify([{ user, userType }]))
     } else {
-      let userList: Array<UserItemProps>  = JSON.parse(users);
+      let userList: Array<UserItemType>  = JSON.parse(users);
       userList = [...userList, { user, userType}]
       localStorage.setItem('users', JSON.stringify(userList))
     }
