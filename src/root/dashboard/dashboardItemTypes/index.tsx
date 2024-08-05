@@ -8,12 +8,11 @@ import { StoredRecordType } from '../addNewRecord';
 
 const DashboardItemTypes = () => {
     const [viewAll, setViewAll] = useState(false);
-    const limit = 3;
     const { type } = useParams();
 
     const storedRecords = localStorage.getItem('records');
     const dataList = storedRecords ? JSON.parse(storedRecords) : []
-    const milkData = dataList.find((item: StoredRecordType) => item.userType === type)
+    const milkData = dataList.find((item: StoredRecordType) => item.actionType === type)
     let comp;
     if(!milkData)
         comp = <CustomCard message="No records found!" />;
@@ -25,7 +24,6 @@ const DashboardItemTypes = () => {
         {comp}
         {milkData && <>
             <Box component="h3" mb={0}>Previous Records</Box>
-            <span>(Last {limit} records)</span>
         </>
         }
         {milkData &&

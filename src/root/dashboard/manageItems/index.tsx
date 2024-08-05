@@ -13,7 +13,10 @@ interface ManageItemsProps {
 
 export default function ManageItems(props: ManageItemsProps) {
   const { data } = props;
-  const [selectedItem, setSelectedItem] = React.useState('');
+  const selectedActionType = localStorage.getItem('selectedActionType');
+  const [selectedItem, setSelectedItem] = React.useState(
+    selectedActionType || ''
+  );
 
   const navigate = useNavigate();
 

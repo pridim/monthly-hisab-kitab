@@ -55,6 +55,7 @@ export default function BasicTable(props: BasicTableProps) {
               </TableCell>
               <TableCell>{row.quantity}</TableCell>
               <TableCell>{row.date}</TableCell>
+              <TableCell>{row.price}</TableCell>
             </TableRow>
           ))}
         </TableBody>

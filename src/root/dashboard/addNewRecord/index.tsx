@@ -23,6 +23,9 @@ export interface StoredRecordType {
     userType: string;
     actionType: string;
     records: RecordType[]
+    startAt: string;
+    unit: string;
+    price: number;
 }
 
 const AddNewRecord = () => {
@@ -33,7 +36,7 @@ const AddNewRecord = () => {
     const loggedInUser = localStorage.getItem('loggedInUser');
     const user: UserItemType = loggedInUser ? JSON.parse(loggedInUser) : {}
     
-    const allRecords = localStorage.getItem('allrecords');
+    const allRecords = localStorage.getItem('records');
     const totalRecords: StoredRecordType[] = allRecords ? JSON.parse(allRecords) : [];
 
     const selectedActionType = localStorage.getItem('selectedActionType');
@@ -42,7 +45,7 @@ const AddNewRecord = () => {
 
 
     const handleSubmit = () => {
-        if(loggedInUser && selectedActionType) {
+        if(user && selectedActionType) {
             if(totalRecords.length > 0) {
                 const newStoredRecord = totalRecords.map((record) => {
                     if(record.userType === user.userType && record.actionType === selectedActionType) {
@@ -51,10 +54,10 @@ const AddNewRecord = () => {
                             records: [
                                 ...record.records, 
                                 {
-                                    type: 'Milk',
+                                    type: selectedActionType,
                                     date: selectedDate?.format('DD-MM-YYYY'),
-                                    quantity,
-                                    price
+                                    quantity: parseFloat(quantity),
+                                    price: parseFloat(quantity) * parseFloat(price)
                                 }
                             ]
                         }
@@ -62,22 +65,25 @@ const AddNewRecord = () => {
                     return record
                 })
                 localStorage.setItem('records', JSON.stringify(newStoredRecord))
-                navigate('/dashboard');
+                navigate(`/dashboard/type/${selectedActionType}`);
             } else {
                 const payload = {
                     userType: user.userType,
-                    actionType: '',
+                    actionType: selectedActionType,
+                    unit: selectedActionType === 'milk' ? 'Ltr' : 'Cane',
+                    price,
+                    startAt: selectedDate?.format('DD-MM-YYYY'),
                     records: [
                         {
-                            type: 'Milk',
+                            type: selectedActionType,
                             date: selectedDate?.format('DD-MM-YYYY'),
-                            quantity,
-                            price
+                            quantity: parseFloat(quantity),
+                            price: parseFloat(quantity) * parseFloat(price)
                         }
                     ]
                 }
                 localStorage.setItem('records', JSON.stringify([payload]));
-                navigate('/dashboard');
+                navigate(`/dashboard/type/${selectedActionType}`);
             }
         }
     }
