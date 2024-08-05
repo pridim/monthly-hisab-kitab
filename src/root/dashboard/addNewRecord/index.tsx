@@ -11,6 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { UserItemType } from '../../registration';
 import { useNavigate } from 'react-router-dom';
+import { getLoggedInUserDetails } from '../../../utils';
 
 export interface RecordType {
     type: string;
@@ -20,8 +21,8 @@ export interface RecordType {
 }
 
 export interface StoredRecordType {
+    phone: string;
     userType: string;
-    actionType: string;
     records: RecordType[]
     startAt: string;
     unit: string;
@@ -29,61 +30,59 @@ export interface StoredRecordType {
 }
 
 const AddNewRecord = () => {
+    const user: UserItemType = getLoggedInUserDetails()
+    
     const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
     const [quantity, setQuantity] = React.useState<string>('');
-    const [price, setPrice] = React.useState<string>('');
+    const [price, setPrice] = React.useState<string>(user.actionType === 'milk' ? '50' : '20');
     
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    const user: UserItemType = loggedInUser ? JSON.parse(loggedInUser) : {}
     
     const allRecords = localStorage.getItem('records');
     const totalRecords: StoredRecordType[] = allRecords ? JSON.parse(allRecords) : [];
-
-    const selectedActionType = localStorage.getItem('selectedActionType');
 
     const navigate = useNavigate();
 
 
     const handleSubmit = () => {
-        if(user && selectedActionType) {
-            if(totalRecords.length > 0) {
-                const newStoredRecord = totalRecords.map((record) => {
-                    if(record.userType === user.userType && record.actionType === selectedActionType) {
-                        return {
-                            ...record,
-                            records: [
-                                ...record.records, 
-                                {
-                                    type: selectedActionType,
-                                    date: selectedDate?.format('DD-MM-YYYY'),
-                                    quantity: parseFloat(quantity),
-                                    price: parseFloat(quantity) * parseFloat(price)
-                                }
-                            ]
-                        }
+        if(user && user.actionType) {
+            const payload = {
+                phone: user.user.phone,
+                userType: user.userType,
+                unit: user.actionType === 'milk' ? 'Ltr' : 'Cane',
+                price,
+                startAt: selectedDate?.format('DD-MM-YYYY'),
+                records: [
+                    {
+                        type: user.actionType === 'milk' ? 'Ltr' : 'Cane',
+                        date: selectedDate?.format('DD-MM-YYYY'),
+                        quantity: parseFloat(quantity),
+                        price: parseFloat(quantity) * parseFloat(price)
                     }
-                    return record
-                })
-                localStorage.setItem('records', JSON.stringify(newStoredRecord))
-                navigate(`/dashboard/type/${selectedActionType}`);
-            } else {
-                const payload = {
-                    userType: user.userType,
-                    actionType: selectedActionType,
-                    unit: selectedActionType === 'milk' ? 'Ltr' : 'Cane',
-                    price,
-                    startAt: selectedDate?.format('DD-MM-YYYY'),
-                    records: [
-                        {
-                            type: selectedActionType,
-                            date: selectedDate?.format('DD-MM-YYYY'),
-                            quantity: parseFloat(quantity),
-                            price: parseFloat(quantity) * parseFloat(price)
-                        }
-                    ]
+                ]
+            }
+            if(totalRecords.length > 0) {
+                const filteredRecord: StoredRecordType[] = totalRecords.filter((record) =>
+                    record.userType === user.userType && record.phone === user.user.phone
+                )
+                let newStoredRecord;
+                if(filteredRecord.length === 0) {
+                    newStoredRecord = [...totalRecords, payload]
+                } else {
+                    const newRecord = {
+                        type: user.actionType,
+                        date: selectedDate?.format('DD-MM-YYYY'),
+                        quantity: parseFloat(quantity),
+                        price: parseFloat(quantity) * parseFloat(price)
+                    }
+                    const records = filteredRecord[0].records
+                    const newRecordsArr = [...records, newRecord]
+                    newStoredRecord = [{...filteredRecord[0], records: newRecordsArr}]
                 }
+                localStorage.setItem('records', JSON.stringify(newStoredRecord))
+                navigate(`/dashboard/type/${user.actionType}`);
+            } else {
                 localStorage.setItem('records', JSON.stringify([payload]));
-                navigate(`/dashboard/type/${selectedActionType}`);
+                navigate(`/dashboard/type/${user.actionType}`);
             }
         }
     }
@@ -104,7 +103,7 @@ const AddNewRecord = () => {
                 <OutlinedInput
                     id="outlined-adornment-weight"
                     fullWidth
-                    endAdornment={<InputAdornment position="end">Ltr</InputAdornment>}
+                    endAdornment={<InputAdornment position="end">{user.actionType === 'milk' ? 'Ltr' : 'Cane'}</InputAdornment>}
                     aria-describedby="outlined-weight-helper-text"
                     inputProps={{
                         'aria-label': 'weight',
@@ -116,11 +115,11 @@ const AddNewRecord = () => {
                 {/* <FormHelperText id="outlined-weight-helper-text">Leter</FormHelperText> */}
             </FormControl>
             <FormControl variant="outlined" fullWidth sx={{alignItems: 'flex-start'}}>
-                <Box component="p" mb={1}>Enter Price (/Ltr)</Box>
+                <Box component="p" mb={1}>Enter Price (/{user.actionType === 'milk' ? 'Ltr' : 'Cane'})</Box>
                 <OutlinedInput
                     id="outlined-adornment-price"
                     fullWidth
-                    endAdornment={<InputAdornment position="end">Rs./Ltr</InputAdornment>}
+                    endAdornment={<InputAdornment position="end">Rs./{user.actionType === 'milk' ? 'Ltr' : 'Cane'}</InputAdornment>}
                     aria-describedby="outlined-price-helper-text"
                     inputProps={{
                         'aria-label': 'weight',

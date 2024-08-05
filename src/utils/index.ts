@@ -16,3 +16,12 @@ export const getFormattedDate = (date: string) => {
 
     return formattedDate
 }
+
+export const getLoggedInUserDetails = () => {
+    
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    
+    const user = loggedInUser ? JSON.parse(loggedInUser) : null;
+
+    return user
+}

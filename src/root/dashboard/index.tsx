@@ -1,27 +1,19 @@
 import React, { useEffect } from 'react'
 import { Box } from '@mui/material'
 import ManageItems from './manageItems';
-import { UserItemType } from '../registration';
-import { getFirstCapLetter, getPrefix } from '../../utils';
+import { getFirstCapLetter, getLoggedInUserDetails, getPrefix } from '../../utils';
 import { ItemLists } from '../../apis/data';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
+    const loggedInUser = getLoggedInUserDetails();
 
     useEffect(() => {
-        // let loggedInUser = localStorage.getItem('loggedInUser') || '';
-        // let totalRecords = localStorage.getItem('totalRecords') || [];
-        // if(loggedInUser && totalRecords) {
-        //     loggedInUser = JSON.parse(loggedInUser);
-        //     const recordFound = totalRecords?.find((record) => record.phone === loggedInUser?.phone)
-        // }
-    }, [])
-    
-    const userData: string | null = localStorage.getItem('loggedInUser');
-    let loggedInUser: UserItemType = { user: { username: '', gender: '', phone:''}, userType: ''}
-    if(userData) {
-        loggedInUser = JSON.parse(userData) as UserItemType;
-    }
+        if(!loggedInUser) {
+            navigate('/login')
+        }
+    }, [loggedInUser, navigate])
         
     return <Box width="100%">
         { loggedInUser && 

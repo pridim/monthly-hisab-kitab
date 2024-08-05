@@ -6,6 +6,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Box } from '@mui/material';
 import TextLabel from '../../../common/LabelComp';
 import { ListItemType } from '../../../apis/types';
+import { getLoggedInUserDetails } from '../../../utils';
 
 interface ManageItemsProps {
   data: ListItemType[];
@@ -13,23 +14,23 @@ interface ManageItemsProps {
 
 export default function ManageItems(props: ManageItemsProps) {
   const { data } = props;
-  const selectedActionType = localStorage.getItem('selectedActionType');
+  const user = getLoggedInUserDetails();
   const [selectedItem, setSelectedItem] = React.useState(
-    selectedActionType || ''
+    user?.actionType || ''
   );
 
   const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedItem(event.target.value);
-    localStorage.setItem('selectedActionType', event.target.value)
+    localStorage.setItem('loggedInUser', JSON.stringify({...user, actionType: event.target.value}))
     if(event.target.value)
       navigate(`/dashboard/type/${event.target.value}`)
   };
 
   return (
     <Box textAlign="left">
-        <TextLabel label="Select item to manage" />
+        <TextLabel label="Choose item to manage" />
         <FormControl fullWidth sx={{mb: 0}}>
             <Select
                 value={selectedItem}

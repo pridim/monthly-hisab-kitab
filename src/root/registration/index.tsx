@@ -18,6 +18,7 @@ export interface UserProps {
 export interface UserItemType {
   user: UserProps;
   userType: string | undefined;
+  actionType: string;
 }
 
 export default function UserRegistration() {
@@ -38,7 +39,7 @@ export default function UserRegistration() {
       localStorage.setItem('users', JSON.stringify([{ user, userType }]))
     } else {
       let userList: Array<UserItemType>  = JSON.parse(users);
-      userList = [...userList, { user, userType}]
+      userList = [...userList, { user, userType, actionType: ''}]
       localStorage.setItem('users', JSON.stringify(userList))
     }
     localStorage.setItem('loggedInUser', JSON.stringify({ user, userType }))
