@@ -1,15 +1,11 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import MoneySharpIcon from '@mui/icons-material/MoneySharp';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { Box, Button } from '@mui/material';
+import AppLogo from '../common/applogo';
 
 const LandingPage = () => {
-    return <Box className="App" justifyContent="center">
-        <Box className="logo-wrapper">
-            <CurrencyRupeeIcon style={{ fontSize: '5rem'}} />
-            <MoneySharpIcon style={{ fontSize: '5rem'}} />
-        </Box>
+    return <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+        <AppLogo />
         <Box mt={2} mb={6}>
             <h2>Monthly Hisab Kitab</h2>
             <span className='sub-desc-3'>(<i> Lets manage monthly grocery and others expenses. </i>)</span>

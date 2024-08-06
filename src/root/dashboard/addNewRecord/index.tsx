@@ -4,7 +4,6 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 // import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,6 +11,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { UserItemType } from '../../registration';
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUserDetails } from '../../../utils';
+
+import dayjs, { Dayjs } from 'dayjs';
+var localizedFormat = require("dayjs/plugin/localizedFormat");
+dayjs.extend(localizedFormat);
 
 export interface RecordType {
     type: string;
@@ -32,7 +35,7 @@ export interface StoredRecordType {
 const AddNewRecord = () => {
     const user: UserItemType = getLoggedInUserDetails()
     
-    const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
+    const [selectedDate, setSelectedDate] = React.useState<Dayjs|null>(dayjs());
     const [quantity, setQuantity] = React.useState<string>('');
     const [price, setPrice] = React.useState<string>(user.actionType === 'milk' ? '50' : '20');
     
@@ -42,7 +45,6 @@ const AddNewRecord = () => {
 
     const navigate = useNavigate();
 
-
     const handleSubmit = () => {
         if(user && user.actionType) {
             const payload = {
@@ -50,11 +52,11 @@ const AddNewRecord = () => {
                 userType: user.userType,
                 unit: user.actionType === 'milk' ? 'Ltr' : 'Cane',
                 price,
-                startAt: selectedDate?.format('DD-MM-YYYY'),
+                startAt: dayjs(selectedDate).format("L"),
                 records: [
                     {
                         type: user.actionType === 'milk' ? 'Ltr' : 'Cane',
-                        date: selectedDate?.format('DD-MM-YYYY'),
+                        date: dayjs(selectedDate).format("L LT"),
                         quantity: parseFloat(quantity),
                         price: parseFloat(quantity) * parseFloat(price)
                     }
@@ -70,7 +72,7 @@ const AddNewRecord = () => {
                 } else {
                     const newRecord = {
                         type: user.actionType,
-                        date: selectedDate?.format('DD-MM-YYYY'),
+                        date: dayjs(selectedDate).format("L LT"),
                         quantity: parseFloat(quantity),
                         price: parseFloat(quantity) * parseFloat(price)
                     }
@@ -94,7 +96,7 @@ const AddNewRecord = () => {
                 <Box component="p" mb={0}>Choose Date</Box>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']} sx={{width: '100%', marginTop: '0px'}}>
-                        <DatePicker value={selectedDate} onChange={(newValue) => setSelectedDate(newValue)} />
+                        <DatePicker value={dayjs(selectedDate)} onChange={(newValue) => setSelectedDate(dayjs(newValue))} />
                     </DemoContainer>
                 </LocalizationProvider>
             </FormControl>

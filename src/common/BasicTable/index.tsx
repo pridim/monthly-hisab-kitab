@@ -13,7 +13,7 @@ function createData(
   record: RecordType
 ) {
     const { type, quantity, date, price  } = record;
-  return { type, quantity, date, price };
+  return { type, quantity, price, date };
 }
 
 interface BasicTableProps {
@@ -22,17 +22,17 @@ interface BasicTableProps {
 }
 
 export default function BasicTable(props: BasicTableProps) {
-    const { data, viewAll } = props;
-    const [row, setRow] = React.useState<RecordType[]>([])
-    
-    React.useEffect(() => {
-        let row = data.records.map((item) => createData(item))
-        if(!viewAll) {
-            row = row.slice(0, 3)
-        }
-        row = row.sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0)
-        setRow(row);
-    }, [data, viewAll])
+  const { data, viewAll } = props;
+  const [row, setRow] = React.useState<RecordType[]>([])
+
+  React.useEffect(() => {
+    let row = data.records.map((item) => createData(item))
+    if(!viewAll) {
+        row = row.slice(0, 3)
+    }
+    row = row.sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0)
+    setRow(row);
+  }, [data, viewAll])
 
   return (
     <TableContainer component={Paper}>
@@ -45,17 +45,17 @@ export default function BasicTable(props: BasicTableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {row.map((row) => (
+          {row.map((row, index) => (
             <TableRow
-              key={`${row.type}-${row.date}`}
+              key={`${row.type}-${row.date}-${index}`}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
                 {row.type}
               </TableCell>
-              <TableCell>{row.quantity}</TableCell>
+              <TableCell align='center'>{row.quantity}</TableCell>
+              <TableCell align='center'>{row.price}</TableCell>
               <TableCell>{row.date}</TableCell>
-              <TableCell>{row.price}</TableCell>
             </TableRow>
           ))}
         </TableBody>
