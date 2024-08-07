@@ -12,13 +12,17 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+// import { getLoggedInUserDetails } from '../../../utils';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Dashboard', 'Pricing'];
+const settings = ['Account', 'Logout'];
 
 function ProfileMenuBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
+//   const user = getLoggedInUserDetails();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -27,15 +31,14 @@ function ProfileMenuBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (page: string) => {
+    if(typeof page === 'string') navigate(`${page.toLowerCase()}`)
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const navigate = useNavigate();
 
   return (
     <AppBar position="static">
@@ -52,6 +55,7 @@ function ProfileMenuBar() {
             >
               <MenuIcon />
             </IconButton>
+            {/* {user && <Box component="p" onClick={() => navigate(-1)}>Back</Box> } */}
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -71,7 +75,7 @@ function ProfileMenuBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -81,14 +85,13 @@ function ProfileMenuBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
               </Button>
             ))}
-          </Box>
-
+          </Box> 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -114,10 +117,10 @@ function ProfileMenuBar() {
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={()=> {
                     if(setting === 'Logout') {
-                        localStorage.clear();
-                        navigate('/login')
+                      localStorage.removeItem('loggedInUser');
+                      navigate('/login')
                     } else {
-                        // TODO: for other profile menus
+                      navigate('/profile')
                     }
                     handleCloseUserMenu()
                 }}

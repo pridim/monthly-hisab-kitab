@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react'
-import { Box } from '@mui/material'
-import ManageItems from './manageItems';
-import { getFirstCapLetter, getLoggedInUserDetails, getPrefix } from '../../utils';
+import { Alert, Box } from '@mui/material'
+import { getLoggedInUserDetails } from '../../utils';
 import { ItemLists } from '../../apis/data';
 import { Outlet, useNavigate } from 'react-router-dom';
+import DashboardItemTypes from './dashboardItemTypes';
+import DashboardItem from './dashboardItem';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const loggedInUser = getLoggedInUserDetails();
+    const storedRecords = localStorage.getItem('records');
+    const dataList = storedRecords ? JSON.parse(storedRecords) : []
 
     useEffect(() => {
         if(!loggedInUser) {
@@ -16,12 +19,21 @@ const Dashboard = () => {
     }, [loggedInUser, navigate])
         
     return <Box width="100%">
-        { loggedInUser && 
-            <Box component="h2" mb={0}>
-                Hello, {getPrefix(loggedInUser.user.gender)} {getFirstCapLetter(loggedInUser.user.username)}
-            </Box>
+        {(loggedInUser && !loggedInUser.actionType)
+            && dataList.length === 0 &&
+            <Alert color='info' sx={{marginBottom: '2rem'}}>No record found!</Alert>
         }
-        <ManageItems data={ItemLists} />
+
+        {(loggedInUser && !loggedInUser.actionType)
+            && dataList.length > 0
+            && ItemLists.map((item) =>
+            <DashboardItem key={item.value} ItemActionType={item.value} />
+        )}
+        
+        {loggedInUser && loggedInUser.actionType &&
+            <DashboardItemTypes data={dataList} ItemActionType={loggedInUser.actionType} /> 
+        }   
+
         <Outlet />
     </Box>
 }

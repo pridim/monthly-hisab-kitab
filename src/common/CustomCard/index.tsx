@@ -4,10 +4,10 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { getFirstCapLetter, getLoggedInUserDetails } from '../../utils';
+import { getFirstCapLetter } from '../../utils';
 import CustomPaper from '../CustomPaper';
 import { RecordType } from '../../apis/types';
-import { Alert, Box, Chip } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { StoredRecordType } from '../../root/dashboard/addNewRecord';
 
@@ -29,20 +29,26 @@ const getTotalQuantity = (data: StoredRecordType) => {
   return totalQuantity
 }
 
-const PrepCardContent =  ({ data, onAddNew, user }: { data: StoredRecordType, onAddNew: () => void, user: any }) => {
+interface PrepCardContentProps {
+  data: StoredRecordType;
+  ItemActionType: string;
+  onAddNew: () => void;
+}
+
+const PrepCardContent =  ({ data, ItemActionType, onAddNew }: PrepCardContentProps) => {
   return <React.Fragment>
     <CardContent>
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
         Start at: {data.startAt}
       </Typography>
       <Typography variant="h5" component="div" fontWeight="bold">
-        Total Quantity: {getTotalQuantity(data)} {user.actionType === 'milk' ? 'Ltr' : 'Cane'}
+        Total Quantity: {getTotalQuantity(data)} {ItemActionType === 'milk' ? 'Ltr' : 'Cane'}
       </Typography>
       <Typography variant="h6" component="div" fontWeight="bold">
         Total Amount: {getTotalPrice(data)} Rs.
       </Typography>
       <Typography variant="body2">
-        {`${getFirstCapLetter(user.actionType)} (price/${user.actionType === 'milk' ? 'Ltr' : 'Cane'}) = ${data.price} Rs.`}
+        {`${getFirstCapLetter(ItemActionType)} (price/${ItemActionType === 'milk' ? 'Ltr' : 'Cane'}) = ${data.price[ItemActionType]} Rs.`}
       </Typography>
     </CardContent>
     <CardActions sx={{justifyContent: 'center' }}>
@@ -57,34 +63,32 @@ const PrepCardContent =  ({ data, onAddNew, user }: { data: StoredRecordType, on
 };
 
 interface CustomCardProps {
-    data?: StoredRecordType;
-    message: string;
+  cardContent?: StoredRecordType | null;
+  message: string;
+  ItemActionType?: string;
 }
 
 export default function CustomCard(props: CustomCardProps) {
-  const { data, message } = props;
+  const { cardContent, message, ItemActionType } = props;
   const navigate = useNavigate();
-  const user = getLoggedInUserDetails();
   return <>
-    { data && 
-      <Box display="flex" justifyContent="flex-end" m={'1rem 1rem 0rem 1rem'}>
-        <Chip label={user.actionType} color="success" sx={{ fontSize: '1.25rem', borderRadius: '0px'}} />
-      </Box>
-    }
     <CustomPaper>
-      {(data && !message )&&
+      {(cardContent && !message )&&
         <Box>
           <Card variant="outlined">
-            <PrepCardContent data={data} onAddNew={() => navigate('/dashboard/add-new')} user={user} />
+            <PrepCardContent
+              data={cardContent}
+              ItemActionType={ItemActionType || ''}
+              onAddNew={() => navigate('/add-new-record')} />
           </Card> 
         </Box>
       }
-      {(!data && message) && <Alert color='info' variant='standard'>{message}</Alert>}
+      {(!cardContent && message) && <Alert color='info' variant='standard'>{message}</Alert>}
     </CustomPaper>;
-    {!data &&
+    {!cardContent &&
     <Button color='info' size="large"
       variant='contained' fullWidth
-      onClick={() => navigate('/dashboard/add-new')}
+      onClick={() => navigate('/add-new-record')}
     >
       Add New Record
     </Button>}

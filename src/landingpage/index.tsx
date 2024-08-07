@@ -1,9 +1,18 @@
-import React from 'react'
-import { Link } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from "react-router-dom";
 import { Box, Button } from '@mui/material';
 import AppLogo from '../common/applogo';
+import { getLoggedInUserDetails } from '../utils';
 
 const LandingPage = () => {
+    const user = getLoggedInUserDetails();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const route = !user ? '/login' : '/dashboard'
+        navigate(route)
+    }, [user, navigate])
+
     return <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
         <AppLogo />
         <Box mt={2} mb={6}>

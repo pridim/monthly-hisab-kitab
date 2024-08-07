@@ -6,19 +6,11 @@ import { Button } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { UserItemType } from '../registration';
-import { getLoggedInUserDetails } from '../../utils';
 
 export default function UserLogin() {
   const [phone, setPhone] = React.useState('')
   const [errorMsg, setErrorMsg] = React.useState('')
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    const loggedInUser = getLoggedInUserDetails();
-    if(loggedInUser) {
-      navigate('/dashboard')
-    }
-  }, [navigate])
 
   const handleSubmit = (e: any) => {
     e.preventDefault();

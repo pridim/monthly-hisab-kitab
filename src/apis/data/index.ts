@@ -2,8 +2,7 @@ import { dataListItemType, ListItemType } from "../types";
 
 export const ItemLists: ListItemType[] = [
     { label: 'Milk', value: 'milk'},
-    { label: 'Water', value: 'water'},
-    { label: 'Other', value: 'other'},
+    { label: 'Water', value: 'water'}
 ]
 
 export const dataList: dataListItemType[] = [

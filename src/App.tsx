@@ -13,6 +13,9 @@ import Dashboard from './root/dashboard';
 import UserLogin from './root/login';
 import DashboardItemTypes from './root/dashboard/dashboardItemTypes';
 import AddNewRecord from './root/dashboard/addNewRecord';
+import ManageItems from './root/dashboard/manageItems';
+import { ItemLists } from './apis/data';
+import UserProfile from './root/userprofile';
 
 const router = createBrowserRouter([
   {
@@ -36,18 +39,22 @@ const router = createBrowserRouter([
         element: <UserLogin />
       },
       {
+        path: "/profile",
+        element: <UserProfile />,
+      },
+      {
         path: '/dashboard',
         element: <Dashboard />,
         children: [
           {
             path: '/dashboard/type/:type',
-            element: <DashboardItemTypes />
-          },
-          {
-            path: '/dashboard/add-new',
-            element: <AddNewRecord />
+            element: <DashboardItemTypes ItemActionType='' />
           }
         ]
+      },
+      {
+        path: '/add-new-record',
+        element: <AddNewRecord />
       }
     ]
   },

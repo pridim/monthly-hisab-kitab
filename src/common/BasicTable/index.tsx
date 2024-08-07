@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { dataListItemType, RecordType } from '../../apis/types';
 import { getFirstCapLetter } from '../../utils';
+import { StoredRecordType } from '../../root/dashboard/addNewRecord';
 
 function createData(
   record: RecordType
@@ -17,7 +18,7 @@ function createData(
 }
 
 interface BasicTableProps {
-    data: dataListItemType;
+    data: StoredRecordType | null;
     viewAll: boolean;
 }
 
@@ -26,6 +27,7 @@ export default function BasicTable(props: BasicTableProps) {
   const [row, setRow] = React.useState<RecordType[]>([])
 
   React.useEffect(() => {
+    if(!data) return
     let row = data.records.map((item) => createData(item))
     if(!viewAll) {
         row = row.slice(0, 3)
