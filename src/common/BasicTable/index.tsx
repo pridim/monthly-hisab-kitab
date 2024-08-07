@@ -22,6 +22,8 @@ function createData(
 interface BasicTableProps {
     data: StoredRecordType | null;
     viewAll: boolean;
+    onEdit: (editContent: RecordType) => void;
+    onDelete: () => void;
 }
 
 export default function BasicTable(props: BasicTableProps) {
@@ -63,10 +65,10 @@ export default function BasicTable(props: BasicTableProps) {
               <TableCell align='center'>{row.quantity}</TableCell>
               <TableCell align='center'>{row.amount}</TableCell>
               <TableCell>{row.date}</TableCell>
-              <TableCell sx={{paddingRight: '4px'}}>
-                <EditOutlined onClick={() => {}} />
+              <TableCell sx={{paddingRight: '4px'}} onClick={() => props.onEdit(row)}>
+                <EditOutlined />
               </TableCell>
-              <TableCell sx={{paddingLeft: '4px'}}>
+              <TableCell sx={{paddingLeft: '4px'}} onClick={props.onDelete}>
                 <DeleteOutlineRounded />
               </TableCell>
             </TableRow>
