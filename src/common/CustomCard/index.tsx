@@ -9,7 +9,7 @@ import CustomPaper from '../CustomPaper';
 import { RecordType } from '../../apis/types';
 import { Alert, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { StoredRecordType } from '../../root/dashboard/addNewRecord';
+import { StoredRecordType } from '../../apis/types';
 
 function getSumPrice(total: number, record: RecordType) {
   return total + record.amount;

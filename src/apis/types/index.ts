@@ -3,8 +3,6 @@ export type ListItemType = {
     value: string;
 }
 
-type shiftType = "morning" | "evening" | "full_day"
-
 export interface RecordType {
     type: string;
     quantity: number;
@@ -12,11 +10,20 @@ export interface RecordType {
     amount: number;
 }
 
-export interface dataListItemType {
+export interface RecordType {
     type: string;
-    startAt: string;
-    price: number;
-    unit: string;
-    shift: string;
+    date: string;
+    quantity: number;
+    amount: number;
+}
+
+export interface StoredRecordType {
+    phone: string;
+    userType: string;
     records: RecordType[]
+    startAt: string;
+    unit: string;
+    price: {
+        [key: string]: number;
+    };
 }

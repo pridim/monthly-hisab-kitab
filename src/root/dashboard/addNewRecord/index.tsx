@@ -14,36 +14,35 @@ import { getLoggedInUserDetails } from '../../../utils';
 
 import dayjs, { Dayjs } from 'dayjs';
 import ManageItems from '../manageItems';
+import { StoredRecordType } from '../../../apis/types';
 var localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
 
-export interface RecordType {
-    type: string;
-    date: string;
-    quantity: number;
-    amount: number;
+interface AddRecordFormType {
+    selectedActionType: string;
+    selectedDate: Dayjs | null;
+    quantity: string;
+    price: string;
 }
 
-export interface StoredRecordType {
-    phone: string;
-    userType: string;
-    records: RecordType[]
-    startAt: string;
-    unit: string;
-    price: {
-        [key: string]: number;
-    };
+interface AddNewRecordType {
+    editRecord: AddRecordFormType | null;
 }
 
-const AddNewRecord = () => {
+const AddNewRecord = (props: AddNewRecordType) => {
     const user: UserItemType = getLoggedInUserDetails()
-    
-    const [selectedItem, setSelectedItem] = React.useState(user?.actionType || '');
-    const [selectedDate, setSelectedDate] = React.useState<Dayjs|null>(dayjs());
-    const [quantity, setQuantity] = React.useState<string>('');
-    const [price, setPrice] = React.useState<string>(user.actionType === 'milk' ? '50' : '20');
+
+    let defaultStateValue: AddRecordFormType = {
+        selectedActionType: user?.actionType || '',
+        selectedDate: dayjs(),
+        quantity: '',
+        price: user.actionType === 'milk' ? '50' : '20'
+    }
+    if(props.editRecord) {
+        defaultStateValue = props.editRecord
+    }
+    const [newRecord, setNewRecord] = useState<AddRecordFormType>(defaultStateValue);
     const [showError, setShowError] = useState(false);
-    
     
     const allRecords = localStorage.getItem('records');
     const totalRecords: StoredRecordType[] = allRecords ? JSON.parse(allRecords) : [];
@@ -52,13 +51,17 @@ const AddNewRecord = () => {
 
     useEffect(() => {
         let price = '20';
-        if(selectedItem === 'milk') {
+        if(newRecord.selectedActionType === 'milk') {
             price = '50'
         }
-        setPrice(price)
-    }, [selectedItem])
+        setNewRecord({
+            ...newRecord,
+            price
+        })
+    }, [newRecord])
 
     const handleSubmit = () => {
+        const { quantity, price, selectedDate } = newRecord;
         if(!quantity || !price) {
             setShowError(true);
             return
@@ -119,12 +122,20 @@ const AddNewRecord = () => {
         <Box component="h2" mb={1}>Add New Record</Box>
         {showError && <Alert color="error">Please provide all the required fields.</Alert>}
         <Box display="flex" flexDirection="column" gap={1} width="100%">
-            <ManageItems selectedItem={selectedItem} setSelectedItem={setSelectedItem}  />
+            <ManageItems
+                selectedItem={newRecord.selectedActionType}
+                setSelectedItem={(actionType) =>
+                    setNewRecord({ ...newRecord, selectedActionType: actionType })
+                }
+            />
             <FormControl variant="outlined" fullWidth sx={{alignItems: 'flex-start'}}>
                 <Box component="p" mb={0}>Choose Date</Box>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']} sx={{width: '100%', marginTop: '0px'}}>
-                        <DatePicker value={dayjs(selectedDate)} onChange={(newValue) => setSelectedDate(dayjs(newValue))} />
+                        <DatePicker
+                            value={dayjs(newRecord.selectedDate)}
+                            onChange={(newValue) => setNewRecord({ ...newRecord, selectedDate: dayjs(newValue)})}
+                        />
                     </DemoContainer>
                 </LocalizationProvider>
             </FormControl>
@@ -138,8 +149,8 @@ const AddNewRecord = () => {
                     inputProps={{
                         'aria-label': 'weight',
                     }}
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+                    value={newRecord.quantity}
+                    onChange={(e) => setNewRecord({...newRecord, quantity: e.target.value})}
                     placeholder='Enter quantity'
                 />
                 {/* <FormHelperText id="outlined-weight-helper-text">Leter</FormHelperText> */}
@@ -154,8 +165,8 @@ const AddNewRecord = () => {
                     inputProps={{
                         'aria-label': 'weight',
                     }}
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    value={newRecord.price}
+                    onChange={(e) => setNewRecord({...newRecord, price: e.target.value})}
                     placeholder='Enter price'
                 />
                 {/* <FormHelperText id="outlined-weight-helper-text">Leter</FormHelperText> */}

@@ -1,17 +1,17 @@
-import { dataListItemType, ListItemType } from "../types";
+import { ListItemType, StoredRecordType } from "../types";
 
 export const ItemLists: ListItemType[] = [
     { label: 'Milk', value: 'milk'},
     { label: 'Water', value: 'water'}
 ]
 
-export const dataList: dataListItemType[] = [
+export const dataList: StoredRecordType[] = [
     {
-        type: 'milk',
+        phone: '8686340975',
+        userType: 'Buyer',
         startAt: '01-08-2024',
-        price: 50,
+        price: { 'milk': 50 },
         unit: 'ltr',
-        shift: 'full_day',
         records: [
             { type: 'Milk', date: '01-08-2024', quantity: 3.5, amount: 50 },
             { type: 'Milk', date: '02-08-2024', quantity: 3.5, amount: 50 },
@@ -20,12 +20,11 @@ export const dataList: dataListItemType[] = [
             { type: 'Milk', date: '05-08-2024', quantity: 3.5, amount: 50 },
         ]
     },
-    {
-        type: 'water',
+    {   phone: '8686340975',
+        userType: 'Buyer',
         startAt: '01-08-2024',
-        price: 20,
+        price: { 'water': 50 },
         unit: 'cane',
-        shift: 'full_day',
         records: [
             { type: 'Water', date: '01-08-2024', quantity: 2, amount: 50 },
             { type: 'Water', date: '04-08-2024', quantity: 2, amount: 50 },

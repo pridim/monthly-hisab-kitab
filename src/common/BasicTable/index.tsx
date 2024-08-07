@@ -8,7 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { RecordType } from '../../apis/types';
 import { getFirstCapLetter } from '../../utils';
-import { StoredRecordType } from '../../root/dashboard/addNewRecord';
+import { StoredRecordType } from '../../apis/types';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import DeleteOutlineRounded from '@mui/icons-material/DeleteOutlineRounded'
 
 function createData(
   record: RecordType
@@ -42,8 +44,11 @@ export default function BasicTable(props: BasicTableProps) {
         <TableHead>
           <TableRow>
             {row.length > 0 && Object.keys(row[0]).map((type) =>
-                <TableCell key={type} sx={{fontWeight: 'bold'}}>{getFirstCapLetter(type)}</TableCell>
+              <TableCell key={type} sx={{fontWeight: 'bold'}}>
+                {getFirstCapLetter(type)}
+              </TableCell>
             )}
+            <TableCell colSpan={2} align='center'>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,6 +63,12 @@ export default function BasicTable(props: BasicTableProps) {
               <TableCell align='center'>{row.quantity}</TableCell>
               <TableCell align='center'>{row.amount}</TableCell>
               <TableCell>{row.date}</TableCell>
+              <TableCell sx={{paddingRight: '4px'}}>
+                <EditOutlined onClick={() => {}} />
+              </TableCell>
+              <TableCell sx={{paddingLeft: '4px'}}>
+                <DeleteOutlineRounded />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

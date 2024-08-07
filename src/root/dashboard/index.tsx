@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Alert, Box, Button } from '@mui/material'
 import { getLoggedInUserDetails } from '../../utils';
 import { ItemLists } from '../../apis/data';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import DashboardItemTypes from './dashboardItemTypes';
 import DashboardItem from './dashboardItem';
 

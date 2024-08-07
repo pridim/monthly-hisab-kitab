@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { Alert, Box, Button, Chip } from '@mui/material'
 import { getFirstCapLetter, getLoggedInUserDetails } from '../../../utils';
 import CustomCard from '../../../common/CustomCard';
 import BasicTable from '../../../common/BasicTable';
-import { StoredRecordType } from '../addNewRecord';
+import { StoredRecordType } from './../../../apis/types';
 import { ItemLists } from '../../../apis/data';
 
 interface DashboardItemTypesProps {
@@ -69,11 +69,14 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
             <Box p={0} maxHeight="300px">
                 {filteredDataList &&
                 filteredDataList[0] &&
-                filteredDataList[0]?.records.length > 2 &&
+                filteredDataList[0]?.records.length > 3 &&
                 <Box display="flex" justifyContent="flex-end">
                     <Button onClick={() => setViewAll(!viewAll)}>Show {!viewAll ? ' more' : ' less'}</Button>
                 </Box>}
-                <BasicTable data={filteredDataList[0] || null} viewAll={viewAll} />
+                <BasicTable
+                    data={filteredDataList[0] || null}
+                    viewAll={viewAll}
+                />
             </Box>
             </>
         }

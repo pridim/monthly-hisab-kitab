@@ -1,7 +1,8 @@
 import React from 'react';
 import { getLoggedInUserDetails } from '../../../utils';
 import CustomCard from '../../../common/CustomCard';
-import { StoredRecordType } from '../addNewRecord';
+import { StoredRecordType } from '../../../apis/types';
+import { RecordType } from '../../../apis/types';
 
 interface DashboardItemProps {
     ItemActionType: string;
@@ -15,7 +16,7 @@ const DashboardItem = (props: DashboardItemProps) => {
 
     const filteredDataList = dataList.map((item: StoredRecordType) => {
         if(item.userType === user.userType) {
-            const filteredRecords = item.records.filter((record) => record.type === ItemActionType)
+            const filteredRecords = item.records.filter((record: RecordType) => record.type === ItemActionType)
             return {
                 ...item,
                 records: filteredRecords
