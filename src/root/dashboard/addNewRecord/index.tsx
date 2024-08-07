@@ -21,7 +21,7 @@ export interface RecordType {
     type: string;
     date: string;
     quantity: number;
-    price: number;
+    amount: number;
 }
 
 export interface StoredRecordType {
@@ -77,7 +77,7 @@ const AddNewRecord = () => {
                         type: user.actionType,
                         date: dayjs(selectedDate).format("L LT"),
                         quantity: parseFloat(quantity),
-                        price: parseFloat(quantity) * parseFloat(price)
+                        amount: parseFloat(quantity) * parseFloat(price)
                     }
                 ]
             }
@@ -93,7 +93,7 @@ const AddNewRecord = () => {
                         type: user.actionType,
                         date: dayjs(selectedDate).format("L LT"),
                         quantity: parseFloat(quantity),
-                        price: parseFloat(quantity) * parseFloat(price)
+                        amount: parseFloat(quantity) * parseFloat(price)
                     }
                     const records = filteredRecord[0].records
                     const newRecordsArr = [...records, newRecord]

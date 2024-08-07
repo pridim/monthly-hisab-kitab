@@ -6,15 +6,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { dataListItemType, RecordType } from '../../apis/types';
+import { RecordType } from '../../apis/types';
 import { getFirstCapLetter } from '../../utils';
 import { StoredRecordType } from '../../root/dashboard/addNewRecord';
 
 function createData(
   record: RecordType
 ) {
-    const { type, quantity, date, price  } = record;
-  return { type, quantity, price, date };
+    const { type, quantity, date, amount  } = record;
+  return { type, quantity, amount, date };
 }
 
 interface BasicTableProps {
@@ -56,7 +56,7 @@ export default function BasicTable(props: BasicTableProps) {
                 {row.type}
               </TableCell>
               <TableCell align='center'>{row.quantity}</TableCell>
-              <TableCell align='center'>{row.price}</TableCell>
+              <TableCell align='center'>{row.amount}</TableCell>
               <TableCell>{row.date}</TableCell>
             </TableRow>
           ))}

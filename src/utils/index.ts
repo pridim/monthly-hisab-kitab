@@ -25,3 +25,10 @@ export const getLoggedInUserDetails = () => {
 
     return user
 }
+
+export const showBackButton = (path: string) => {
+    const arraysListToShowBackButton = [
+        '/add-new-record'
+    ]
+    return arraysListToShowBackButton.includes(path)
+}

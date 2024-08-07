@@ -11,8 +11,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from 'react-router-dom';
-// import { getLoggedInUserDetails } from '../../../utils';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getLoggedInUserDetails, showBackButton } from '../../../utils';
 
 const pages = ['Dashboard', 'Pricing'];
 const settings = ['Account', 'Logout'];
@@ -22,7 +22,8 @@ function ProfileMenuBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
-//   const user = getLoggedInUserDetails();
+  const user = getLoggedInUserDetails();
+  const location = useLocation();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -40,6 +41,8 @@ function ProfileMenuBar() {
     setAnchorElUser(null);
   };
 
+  const isBackButtonVisible = showBackButton(location.pathname)
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -55,7 +58,7 @@ function ProfileMenuBar() {
             >
               <MenuIcon />
             </IconButton>
-            {/* {user && <Box component="p" onClick={() => navigate(-1)}>Back</Box> } */}
+            {user && isBackButtonVisible && <Box component="p" onClick={() => navigate(-1)}>Back</Box> }
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}

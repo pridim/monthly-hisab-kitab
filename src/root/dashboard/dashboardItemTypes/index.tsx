@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { Box, Button, Chip } from '@mui/material'
+import { Alert, Box, Button, Chip } from '@mui/material'
 import { getFirstCapLetter, getLoggedInUserDetails } from '../../../utils';
 import CustomCard from '../../../common/CustomCard';
 import BasicTable from '../../../common/BasicTable';
@@ -61,7 +61,12 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
         
         {filteredDataList.length > 0 && <>
             <Box component="h3" mb={0}>Previous Records</Box>
-            <Box p={2} maxHeight="300px">
+            {filteredDataList &&
+                filteredDataList[0] &&
+                filteredDataList[0]?.records.length === 0 &&
+                <Alert color='info'>No record found!</Alert>    
+            }
+            <Box p={0} maxHeight="300px">
                 {filteredDataList &&
                 filteredDataList[0] &&
                 filteredDataList[0]?.records.length > 2 &&

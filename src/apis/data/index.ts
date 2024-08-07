@@ -13,11 +13,11 @@ export const dataList: dataListItemType[] = [
         unit: 'ltr',
         shift: 'full_day',
         records: [
-            { type: 'Milk', date: '01-08-2024', quantity: 3.5, price: 50 },
-            { type: 'Milk', date: '02-08-2024', quantity: 3.5, price: 50 },
-            { type: 'Milk', date: '03-08-2024', quantity: 3.5, price: 50 },
-            { type: 'Milk', date: '04-08-2024', quantity: 3.5, price: 50 },
-            { type: 'Milk', date: '05-08-2024', quantity: 3.5, price: 50 },
+            { type: 'Milk', date: '01-08-2024', quantity: 3.5, amount: 50 },
+            { type: 'Milk', date: '02-08-2024', quantity: 3.5, amount: 50 },
+            { type: 'Milk', date: '03-08-2024', quantity: 3.5, amount: 50 },
+            { type: 'Milk', date: '04-08-2024', quantity: 3.5, amount: 50 },
+            { type: 'Milk', date: '05-08-2024', quantity: 3.5, amount: 50 },
         ]
     },
     {
@@ -27,8 +27,8 @@ export const dataList: dataListItemType[] = [
         unit: 'cane',
         shift: 'full_day',
         records: [
-            { type: 'Water', date: '01-08-2024', quantity: 2, price: 50 },
-            { type: 'Water', date: '04-08-2024', quantity: 2, price: 50 },
+            { type: 'Water', date: '01-08-2024', quantity: 2, amount: 50 },
+            { type: 'Water', date: '04-08-2024', quantity: 2, amount: 50 },
         ]
     }
 ]

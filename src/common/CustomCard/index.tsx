@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { StoredRecordType } from '../../root/dashboard/addNewRecord';
 
 function getSumPrice(total: number, record: RecordType) {
-  return total + record.price;
+  return total + record.amount;
 }
 
 function getSumQuantity(total: number, record: RecordType): number {

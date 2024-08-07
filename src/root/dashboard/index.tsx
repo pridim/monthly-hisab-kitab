@@ -18,7 +18,7 @@ const Dashboard = () => {
         }
     }, [loggedInUser, navigate])
         
-    return <Box width="100%" p={2}>
+    return <Box width="100%" p={0}>
         {(loggedInUser && !loggedInUser.actionType)
             && dataList.length === 0 && <>
             <Alert color='info' sx={{marginBottom: '2rem'}}>No record found!</Alert>

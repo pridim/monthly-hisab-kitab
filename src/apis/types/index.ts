@@ -9,7 +9,7 @@ export interface RecordType {
     type: string;
     quantity: number;
     date: string;
-    price: number;
+    amount: number;
 }
 
 export interface dataListItemType {
