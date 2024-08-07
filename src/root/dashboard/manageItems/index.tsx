@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -16,11 +15,10 @@ interface ManageItemsProps {
 export default function ManageItems(props: ManageItemsProps) {
   const { selectedItem } = props;
   const user = getLoggedInUserDetails();
-  const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     if(!event.target.value) {
-      navigate('/dashboard')
+      return
     } else {
       props.setSelectedItem(event.target.value);
     }

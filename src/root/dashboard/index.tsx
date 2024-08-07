@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { Alert, Box } from '@mui/material'
+import { Alert, Box, Button } from '@mui/material'
 import { getLoggedInUserDetails } from '../../utils';
 import { ItemLists } from '../../apis/data';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import DashboardItemTypes from './dashboardItemTypes';
 import DashboardItem from './dashboardItem';
 
@@ -18,11 +18,14 @@ const Dashboard = () => {
         }
     }, [loggedInUser, navigate])
         
-    return <Box width="100%">
+    return <Box width="100%" p={2}>
         {(loggedInUser && !loggedInUser.actionType)
-            && dataList.length === 0 &&
+            && dataList.length === 0 && <>
             <Alert color='info' sx={{marginBottom: '2rem'}}>No record found!</Alert>
-        }
+            <Button color="primary" variant='contained' onClick={() => navigate('/add-new-record')}>
+                Add new record
+            </Button>
+        </>}
 
         {(loggedInUser && !loggedInUser.actionType)
             && dataList.length > 0

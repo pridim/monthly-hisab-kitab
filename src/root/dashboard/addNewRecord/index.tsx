@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Box, Button } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -49,6 +49,14 @@ const AddNewRecord = () => {
     const totalRecords: StoredRecordType[] = allRecords ? JSON.parse(allRecords) : [];
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let price = '20';
+        if(selectedItem === 'milk') {
+            price = '50'
+        }
+        setPrice(price)
+    }, [selectedItem])
 
     const handleSubmit = () => {
         if(!quantity || !price) {
