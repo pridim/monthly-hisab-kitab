@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Alert, Box, Button } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -35,30 +35,19 @@ const AddNewRecord = (props: AddNewRecordType) => {
     let defaultStateValue: AddRecordFormType = {
         selectedActionType: user?.actionType || '',
         selectedDate: dayjs(),
-        quantity: '',
+        quantity: '1',
         price: user.actionType === 'milk' ? '50' : '20'
     }
     if(props.editRecord) {
         defaultStateValue = props.editRecord
     }
-    const [newRecord, setNewRecord] = useState<AddRecordFormType>(defaultStateValue);
+    const [newRecord, setNewRecord] = useState<AddRecordFormType>({...defaultStateValue});
     const [showError, setShowError] = useState(false);
     
     const allRecords = localStorage.getItem('records');
     const totalRecords: StoredRecordType[] = allRecords ? JSON.parse(allRecords) : [];
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        let price = '20';
-        if(newRecord.selectedActionType === 'milk') {
-            price = '50'
-        }
-        setNewRecord({
-            ...newRecord,
-            price
-        })
-    }, [newRecord])
 
     const handleSubmit = () => {
         const { quantity, price, selectedDate } = newRecord;
@@ -125,7 +114,11 @@ const AddNewRecord = (props: AddNewRecordType) => {
             <ManageItems
                 selectedItem={newRecord.selectedActionType}
                 setSelectedItem={(actionType) =>
-                    setNewRecord({ ...newRecord, selectedActionType: actionType })
+                    setNewRecord({
+                        ...newRecord, 
+                        selectedActionType: actionType,
+                        price: actionType === 'milk' ? '50' : '20'
+                    })
                 }
             />
             <FormControl variant="outlined" fullWidth sx={{alignItems: 'flex-start'}}>

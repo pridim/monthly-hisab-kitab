@@ -33,10 +33,10 @@ export default function BasicTable(props: BasicTableProps) {
   React.useEffect(() => {
     if(!data) return
     let row = data.records.map((item) => createData(item))
+    row = row.sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0)
     if(!viewAll) {
         row = row.slice(0, 3)
     }
-    row = row.sort((a, b) => a.date > b.date ? -1 : a.date < b.date ? 1 : 0)
     setRow(row);
   }, [data, viewAll])
 
