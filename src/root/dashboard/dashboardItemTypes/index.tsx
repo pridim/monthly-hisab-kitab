@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom';
 import { Alert, Box, Button, Chip } from '@mui/material'
 import { getFirstCapLetter, getLoggedInUserDetails } from '../../../utils';
 import CustomCard from '../../../common/CustomCard';
 import BasicTable from '../../../common/BasicTable';
-import { StoredRecordType } from './../../../apis/types';
+import { RecordType, StoredRecordType } from './../../../apis/types';
 import { ItemLists } from '../../../apis/data';
 import ConfirmDialog from '../../../common/ConfirmDialog';
+import AddNewRecord from '../addNewRecord';
+import dayjs from 'dayjs';
+import CustomModal from '../../../common/CustomModal';
 
 interface DashboardItemTypesProps {
     data?: StoredRecordType[];
@@ -17,8 +19,9 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
     const [viewAll, setViewAll] = useState(false);
     const [selectedTab, setSelectedTab] = React.useState(props.ItemActionType || '')
     const [showDialog, setShowDialog] = useState(false);
+    const [editRecord, setEditRecord] = useState<RecordType | null>(null);
+    const [open, setOpen] = useState(false);
     
-    const { type } = useParams();
     const user = getLoggedInUserDetails()
 
     const handleDialogConfirm = (flag: boolean) => {
@@ -59,6 +62,23 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
                 handleDialog={handleDialogConfirm}
             />
         }
+        {editRecord &&
+            <CustomModal open={open} handleClose={()=> setOpen(false)}>
+                <AddNewRecord
+                    editRecord={{
+                        id: editRecord.recordId,
+                        selectedActionType: editRecord.type,
+                        selectedDate: dayjs(editRecord.date),
+                        quantity: editRecord.quantity.toString(),
+                        price: (editRecord.amount/editRecord.quantity).toString()
+                    }}
+                    handleUpdate={(open) => {
+                        setOpen(open)
+                        setEditRecord(null);
+                    }}
+                />
+            </CustomModal>
+        }
         <Box justifyContent="flex-start" width="100%">
             <Box component="h2">{getFirstCapLetter(selectedTab||'')} Dashboard</Box>
             <Box display="flex" flexDirection="row" justifyContent="flex-start" m={'1rem 1rem 0rem 1rem'}>
@@ -95,8 +115,9 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
                     <BasicTable
                         data={filteredDataList[0] || null}
                         viewAll={viewAll}
-                        onEdit={(editContent: any) => {
-                            console.log(editContent)
+                        onEdit={(editContent: RecordType) => {
+                            setEditRecord(editContent)
+                            setOpen(true)
                         } }
                         onDelete={() => setShowDialog(true)}
                     />

@@ -11,6 +11,7 @@ export interface RecordType {
 }
 
 export interface RecordType {
+    recordId: number;
     type: string;
     date: string;
     quantity: number;
@@ -18,6 +19,7 @@ export interface RecordType {
 }
 
 export interface StoredRecordType {
+    id: number;
     phone: string;
     userType: string;
     records: RecordType[]

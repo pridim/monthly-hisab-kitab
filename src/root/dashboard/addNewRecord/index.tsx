@@ -25,11 +25,17 @@ interface AddRecordFormType {
     price: string;
 }
 
+type EditRecordType = AddRecordFormType & {
+    id: number;
+}
+
 interface AddNewRecordType {
-    editRecord: AddRecordFormType | null;
+    editRecord?: EditRecordType | null;
+    handleUpdate?: (open: boolean) => void;
 }
 
 const AddNewRecord = (props: AddNewRecordType) => {
+    const { editRecord } = props;
     const user: UserItemType = getLoggedInUserDetails()
 
     let defaultStateValue: AddRecordFormType = {
@@ -38,8 +44,8 @@ const AddNewRecord = (props: AddNewRecordType) => {
         quantity: '1',
         price: user.actionType === 'milk' ? '50' : '20'
     }
-    if(props.editRecord) {
-        defaultStateValue = props.editRecord
+    if(editRecord) {
+        defaultStateValue = editRecord
     }
     const [newRecord, setNewRecord] = useState<AddRecordFormType>({...defaultStateValue});
     const [showError, setShowError] = useState(false);
@@ -66,8 +72,9 @@ const AddNewRecord = (props: AddNewRecordType) => {
                 startAt: dayjs(selectedDate).format("L"),
                 records: [
                     {
+                        recordId: 1,
                         type: user.actionType,
-                        date: dayjs(selectedDate).format("L LT"),
+                        date: selectedDate,
                         quantity: parseFloat(quantity),
                         amount: parseFloat(quantity) * parseFloat(price)
                     }
@@ -81,14 +88,28 @@ const AddNewRecord = (props: AddNewRecordType) => {
                 if(filteredRecord.length === 0) {
                     newStoredRecord = [...totalRecords, payload]
                 } else {
-                    const newRecord = {
+                    const recordPayload = {
                         type: user.actionType,
-                        date: dayjs(selectedDate).format("L LT"),
+                        date: selectedDate,
                         quantity: parseFloat(quantity),
                         amount: parseFloat(quantity) * parseFloat(price)
                     }
+                    let addRecordPayload;
+                    let updateRecordPayload: any;
+                    if(editRecord) {
+                        updateRecordPayload = recordPayload
+                    } else {
+                        addRecordPayload = {
+                            recordId: filteredRecord[0].records.length + 1,
+                            ...recordPayload
+                        }
+                    }
                     const records = filteredRecord[0].records
-                    const newRecordsArr = [...records, newRecord]
+                    const newRecordsArr =
+                        editRecord
+                        ? records.map((record) => record.recordId === editRecord.id ? updateRecordPayload : record)
+                        : [...records, addRecordPayload]
+                    
                     newStoredRecord = [{
                         ...filteredRecord[0],
                         price: {
@@ -98,17 +119,20 @@ const AddNewRecord = (props: AddNewRecordType) => {
                         records: newRecordsArr
                     }]
                 }
+                if(editRecord && props.handleUpdate) {
+                    props.handleUpdate(false);
+                }
                 localStorage.setItem('records', JSON.stringify(newStoredRecord))
                 navigate(`/dashboard/type/${user.actionType}`);
             } else {
-                localStorage.setItem('records', JSON.stringify([payload]));
+                localStorage.setItem('records', JSON.stringify([{ id: 1, ...payload }]));
                 navigate(`/dashboard/type/${user.actionType}`);
             }
         }
     }
 
     return <Box display="flex" flexDirection="column" mt={2} width="100%">
-        <Box component="h2" mb={1}>Add New Record</Box>
+        <Box component="h2" mb={1}>{editRecord ? 'Update' : 'Add New'} Record</Box>
         {showError && <Alert color="error">Please provide all the required fields.</Alert>}
         <Box display="flex" flexDirection="column" gap={1} width="100%">
             <ManageItems
@@ -164,7 +188,13 @@ const AddNewRecord = (props: AddNewRecordType) => {
                 />
                 {/* <FormHelperText id="outlined-weight-helper-text">Leter</FormHelperText> */}
             </FormControl>
-            <Button color="warning" variant='contained' sx={{marginTop: '1rem'}} fullWidth onClick={handleSubmit}>Submit</Button>
+            <Button
+                fullWidth
+                color="warning"
+                variant='contained'
+                sx={{marginTop: '1rem'}}
+                onClick={handleSubmit}
+            >{editRecord ? 'Update' : 'Save'}</Button>
         </Box>
     </Box>
 }

@@ -16,8 +16,8 @@ import dayjs from 'dayjs';
 function createData(
   record: RecordType
 ) {
-    const { type, quantity, date, amount  } = record;
-  return { type, quantity, amount, date };
+    const { recordId, type, quantity, date, amount  } = record;
+  return { recordId, type, quantity, amount, date };
 }
 
 interface BasicTableProps {
@@ -57,12 +57,13 @@ export default function BasicTable(props: BasicTableProps) {
         <TableBody>
           {row.map((row, index) => (
             <TableRow
-              key={`${row.type}-${row.date}-${index}`}
+              key={`${row.type}-${row.date}-${row.recordId}-${index}`}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.type}
+                {index + 1}
               </TableCell>
+              <TableCell align='center'>{row.type}</TableCell>
               <TableCell align='center'>{row.quantity}</TableCell>
               <TableCell align='center'>{row.amount}</TableCell>
               <TableCell>{dayjs(row.date).format('DD/MM/YYYY')}</TableCell>
