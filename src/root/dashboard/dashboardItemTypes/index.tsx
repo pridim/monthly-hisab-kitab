@@ -60,7 +60,7 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
             />
         }
         <Box justifyContent="flex-start" width="100%">
-            <Box component="h2">{getFirstCapLetter(type||'')} Dashboard</Box>
+            <Box component="h2">{getFirstCapLetter(selectedTab||'')} Dashboard</Box>
             <Box display="flex" flexDirection="row" justifyContent="flex-start" m={'1rem 1rem 0rem 1rem'}>
                 {ItemLists.map((item) =>
                     <Chip
