@@ -11,6 +11,7 @@ import { getFirstCapLetter } from '../../utils';
 import { StoredRecordType } from '../../apis/types';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import DeleteOutlineRounded from '@mui/icons-material/DeleteOutlineRounded'
+import dayjs from 'dayjs';
 
 function createData(
   record: RecordType
@@ -64,7 +65,7 @@ export default function BasicTable(props: BasicTableProps) {
               </TableCell>
               <TableCell align='center'>{row.quantity}</TableCell>
               <TableCell align='center'>{row.amount}</TableCell>
-              <TableCell>{row.date}</TableCell>
+              <TableCell>{dayjs(row.date).format('DD/MM/YYYY')}</TableCell>
               <TableCell sx={{paddingRight: '4px'}} onClick={() => props.onEdit(row)}>
                 <EditOutlined />
               </TableCell>
