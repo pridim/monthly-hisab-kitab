@@ -14,6 +14,16 @@ const DashboardItem = (props: DashboardItemProps) => {
     const storedRecords = localStorage.getItem('records');
     const dataList = storedRecords ? JSON.parse(storedRecords) : []
 
+    const handlePreviousRepeat = () => {
+        console.log("handle previous called!");
+        if(dataList.length === 0) {
+            alert("Please add at least one row to the table!");
+            return
+        }
+        const lastRow = dataList[dataList.length - 1];
+        console.log("this row " + lastRow + " has to be repeated")
+    }
+
     const filteredDataList = dataList.map((item: StoredRecordType) => {
         if(item.userType === user.userType) {
             const filteredRecords = item.records.filter((record: RecordType) => record.type === ItemActionType)
@@ -23,13 +33,18 @@ const DashboardItem = (props: DashboardItemProps) => {
             }
         }
         return null;
-    })
+    });
 
     let comp;
     if(filteredDataList.length === 0)
         comp = <CustomCard message="No records found!" />;
     else
-        comp = <CustomCard cardContent={filteredDataList[0]} ItemActionType={ItemActionType} message=''/>;
+        comp = <CustomCard
+            cardContent={filteredDataList[0]}
+            ItemActionType={ItemActionType}
+            message=''
+            handlePreviousRepeat={handlePreviousRepeat}
+        />;
 
     return comp
 }

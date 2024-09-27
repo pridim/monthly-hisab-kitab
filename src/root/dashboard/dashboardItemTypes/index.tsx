@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Box, Button, Chip } from '@mui/material'
 import { getFirstCapLetter, getLoggedInUserDetails } from '../../../utils';
 import CustomCard from '../../../common/CustomCard';
 import BasicTable from '../../../common/BasicTable';
 import { RecordType, StoredRecordType } from './../../../apis/types';
-import { ItemLists } from '../../../apis/data';
 import ConfirmDialog from '../../../common/ConfirmDialog';
 import AddNewRecord from '../addNewRecord';
 import dayjs from 'dayjs';
 import CustomModal from '../../../common/CustomModal';
+import { ItemLists, MonthsList, YearsList } from '../../../apis/data';
+import ManageItems from '../manageItems';
 
 interface DashboardItemTypesProps {
     data?: StoredRecordType[];
@@ -21,8 +22,47 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
     const [showDialog, setShowDialog] = useState(false);
     const [editRecord, setEditRecord] = useState<RecordType | null>(null);
     const [open, setOpen] = useState(false);
+    const [filteredDataList, setFilteredDataList] = useState<StoredRecordType[]>([]);
+    const [selectedYear, setSelectedYear] = useState(dayjs().year().toString());
+    const [selectedMonth, setSelectedMonth] = useState((dayjs().month() + 1).toString());
     
     const user = getLoggedInUserDetails()
+
+    useEffect(() => {
+        let filteredList: any = props.data && props.data.map((item: StoredRecordType) => {
+            if(item.userType === user.userType) {
+                const filteredRecords = item.records.filter((record) => record.type === selectedTab)
+                return {
+                    ...item,
+                    records: filteredRecords
+                }
+            }
+            return null;
+        })
+        setFilteredDataList(filteredList)
+    }, [props, selectedTab, user])
+
+    const handleDateChange = (y: string, m: string) => {
+        let filteredList: any = filteredDataList.map((item: StoredRecordType) => {
+            const filteredRecords = item.records.filter(
+                (record) => {
+                    const year = dayjs(record.date).year().toString()
+                    const month = (dayjs(record.date).month() + 1).toString()
+                    if(record.type === selectedTab && year === y && month === m) {
+                        console.log(year, selectedYear, month, selectedMonth)
+                        return record
+                    }
+                    return null
+                }
+            )
+            console.log('filteredRecords' + filteredRecords)
+            return {
+                ...item,
+                records: filteredRecords
+            }
+        })
+        setFilteredDataList(filteredList)
+    }
 
     const handleDialogConfirm = (flag: boolean) => {
         if(flag) {
@@ -32,26 +72,49 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
         }
     }
 
+    const handlePreviousRepeat = () => {
+        if(!filteredDataList || (filteredDataList.length === 0)) {
+            alert("Please add at least one row to the table!")
+            return;
+        }
+        let filteredList: any = filteredDataList.map((item: StoredRecordType) => {
+            if(item.userType === user.userType) {
+                const filteredRecords = item.records.filter((record) => record.type === selectedTab)
+                let newRecords = filteredRecords;
+                if(filteredRecords.length === 0) {
+                    alert("Please add at least one row to the " + selectedTab)
+                } else {
+                    const previous_record = filteredRecords[filteredRecords.length - 1];
+                    const today_record: any = {
+                        ...previous_record,
+                        date: new Date().toLocaleDateString(),
+                    }
+                    newRecords = [...filteredRecords, today_record]
+                }
+                return {
+                    ...item,
+                    records: newRecords
+                }
+            }
+            return null;
+        })
+        setFilteredDataList(filteredList);
+    }
+
     if(!props.data) {
         return null
     }
-
-    const filteredDataList = props.data.map((item: StoredRecordType) => {
-        if(item.userType === user.userType) {
-            const filteredRecords = item.records.filter((record) => record.type === selectedTab)
-            return {
-                ...item,
-                records: filteredRecords
-            }
-        }
-        return null;
-    })
 
     let comp;
     if(filteredDataList.length === 0)
         comp = <CustomCard message="No records found!" ItemActionType={selectedTab} />;
     else
-        comp = <CustomCard cardContent={filteredDataList[0]} ItemActionType={selectedTab} message=''/>;
+        comp = <CustomCard
+            cardContent={filteredDataList[0]}
+            ItemActionType={selectedTab}
+            message=''
+            handlePreviousRepeat={handlePreviousRepeat}
+        />;
 
     return <>
         {showDialog && 
@@ -100,6 +163,28 @@ const DashboardItemTypes = (props: DashboardItemTypesProps) => {
             
             {filteredDataList.length > 0 && <>
                 <Box component="h3" mb={0}>Previous Records</Box>
+                <Box width="100%" sx={{display:'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <ManageItems
+                        selectedItem={selectedYear}
+                        setSelectedItem={(year) => {
+                            setSelectedYear(year);
+                            handleDateChange(year, selectedMonth)
+                        }}
+                        data={YearsList}
+                        label='Year'
+                        styles={{width: 'inherit'}}
+                    />
+                    <ManageItems
+                        selectedItem={selectedMonth}
+                        setSelectedItem={(month) => {
+                            setSelectedMonth(month)
+                            handleDateChange(selectedYear, month)
+                        }}
+                        data={MonthsList}
+                        label='Month'
+                        styles={{width: 'inherit'}}
+                    />
+                </Box>
                 {filteredDataList &&
                     filteredDataList[0] &&
                     filteredDataList[0]?.records.length === 0 &&

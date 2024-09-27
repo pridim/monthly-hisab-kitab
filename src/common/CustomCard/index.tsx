@@ -33,9 +33,10 @@ interface PrepCardContentProps {
   data: StoredRecordType;
   ItemActionType: string;
   onAddNew: () => void;
+  onRepeatPrevious?: () => void;
 }
 
-const PrepCardContent =  ({ data, ItemActionType, onAddNew }: PrepCardContentProps) => {
+const PrepCardContent =  ({ data, ItemActionType, onAddNew, onRepeatPrevious }: PrepCardContentProps) => {
   return <React.Fragment>
     <CardContent>
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -58,6 +59,16 @@ const PrepCardContent =  ({ data, ItemActionType, onAddNew }: PrepCardContentPro
       >
         Add New Record
       </Button>
+      <Button color='info' size="large"
+        variant='contained' fullWidth
+        onClick={() => {
+          if(onRepeatPrevious) {
+            onRepeatPrevious();
+          }
+        }}
+      >
+        Repeat Previous
+      </Button>
     </CardActions>
   </React.Fragment>
 };
@@ -66,6 +77,7 @@ interface CustomCardProps {
   cardContent?: StoredRecordType | null;
   message: string;
   ItemActionType?: string;
+  handlePreviousRepeat?: () => void;
 }
 
 export default function CustomCard(props: CustomCardProps) {
@@ -79,7 +91,9 @@ export default function CustomCard(props: CustomCardProps) {
             <PrepCardContent
               data={cardContent}
               ItemActionType={ItemActionType || ''}
-              onAddNew={() => navigate('/add-new-record')} />
+              onAddNew={() => navigate('/add-new-record')}
+              onRepeatPrevious={props.handlePreviousRepeat}
+            />
           </Card> 
         </Box>
       }

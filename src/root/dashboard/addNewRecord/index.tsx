@@ -15,6 +15,7 @@ import { getLoggedInUserDetails } from '../../../utils';
 import dayjs, { Dayjs } from 'dayjs';
 import ManageItems from '../manageItems';
 import { StoredRecordType } from '../../../apis/types';
+import { ItemLists } from '../../../apis/data';
 var localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
 
@@ -144,6 +145,8 @@ const AddNewRecord = (props: AddNewRecordType) => {
                         price: actionType === 'milk' ? '50' : '20'
                     })
                 }
+                data={ItemLists}
+                label='Select record type'
             />
             <FormControl variant="outlined" fullWidth sx={{alignItems: 'flex-start'}}>
                 <Box component="p" mb={0}>Choose Date</Box>

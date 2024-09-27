@@ -5,15 +5,17 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Box } from '@mui/material';
 import { ListItemType } from '../../../apis/types';
 import { getLoggedInUserDetails } from '../../../utils';
-import { ItemLists } from '../../../apis/data';
 
 interface ManageItemsProps {
   selectedItem: string;
   setSelectedItem: (selectedItem: string) => void;
+  data: ListItemType[];
+  label: string;
+  styles?: any;
 }
 
 export default function ManageItems(props: ManageItemsProps) {
-  const { selectedItem } = props;
+  const { selectedItem, data, label, styles = {} } = props;
   const user = getLoggedInUserDetails();
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -25,10 +27,9 @@ export default function ManageItems(props: ManageItemsProps) {
     localStorage.setItem('loggedInUser', JSON.stringify({...user, actionType: event.target.value}))
   };
 
-  const data: ListItemType[] = ItemLists;
   return (
-    <Box textAlign="left">
-      <Box component="p" mb={1}>Select record type</Box>
+    <Box textAlign="left" sx={{...styles}}>
+      <Box component="p" mb={1}>{label}</Box>
       <FormControl fullWidth sx={{mb: 0}}>
         <Select
           value={selectedItem}
